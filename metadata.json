@@ -1,0 +1,7 @@
+{
+  "name": "CodeCanvas AI",
+  "description": "An autonomous UI-to-code transformation tool that converts sketches into fully functional React applications using Gemini Vision.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
