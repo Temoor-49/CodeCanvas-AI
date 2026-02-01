@@ -6,45 +6,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeCanvas AI Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-main: #020617;
+            --accent: #6366f1;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #020617;
-            color: #e2e8f0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: #f1f5f9;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         .font-mono {
-            font-family: 'Fira Code', monospace;
+            font-family: 'JetBrains Mono', monospace;
         }
         
+        /* Premium Scrollbar */
         .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
+          width: 5px;
+          height: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(15, 23, 42, 0.4);
+          background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #1e293b;
+          background: rgba(148, 163, 184, 0.1);
           border-radius: 10px;
+          transition: background 0.2s ease;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #334155;
+          background: rgba(148, 163, 184, 0.2);
         }
 
-        @keyframes loading {
-          0% { transform: translateX(-100%); }
-          50% { transform: translateX(0%); }
-          100% { transform: translateX(100%); }
+        /* Sophisticated Background Mesh */
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(244, 63, 94, 0.05) 0%, transparent 50%);
+            background-color: var(--bg-main);
         }
 
-        /* Smooth canvas appearance */
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .animate-subtle-pulse {
+            animation: subtle-pulse 4s ease-in-out infinite;
+        }
+
+        /* Glassmorphism Overlays */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-panel-heavy {
+            background: rgba(7, 12, 30, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Smooth canvas rendering */
         canvas {
-          image-rendering: -moz-crisp-edges;
           image-rendering: -webkit-optimize-contrast;
           image-rendering: crisp-edges;
-          image-rendering: pixelated;
+        }
+
+        @keyframes scan {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100%); }
+        }
+        .scanning-line {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+            box-shadow: 0 0 15px var(--accent);
+            animation: scan 3s linear infinite;
         }
     </style>
 <script type="importmap">
@@ -60,6 +108,7 @@
 </script>
 </head>
 <body>
+    <div class="mesh-bg"></div>
     <div id="root"></div>
 </body>
 </html>

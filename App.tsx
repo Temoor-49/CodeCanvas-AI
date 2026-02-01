@@ -4,7 +4,8 @@ import {
   Layout, Upload, Code, Eye, RefreshCcw, Send, 
   AlertCircle, CheckCircle2, FileJson, Palette,
   MousePointer2, Sparkles, Layers, Wand2, Camera, X, Check,
-  ChevronDown, Copy, ExternalLink, Moon, Sun, Zap, Droplets, Menu
+  ChevronDown, Copy, ExternalLink, Moon, Sun, Zap, Droplets, Menu,
+  Terminal, Monitor, Box, Rocket
 } from 'lucide-react';
 import { transformSketchToCode } from './services/gemini';
 import { AppStatus, TransformationResult } from './types';
@@ -172,38 +173,32 @@ export default function App() {
   };
 
   return (
-    <div className={`h-screen flex flex-col font-sans transition-colors duration-500 overflow-hidden ${currentTheme.bg} text-slate-200 selection:bg-indigo-500/30`}>
-      <div className="fixed inset-0 pointer-events-none opacity-20">
-        <div className={`absolute top-[-10%] left-[-10%] w-[40%] h-[40%] blur-[120px] rounded-full animate-pulse ${theme === 'midnight' ? 'bg-indigo-500/20' : theme === 'emerald' ? 'bg-emerald-500/20' : theme === 'rose' ? 'bg-rose-500/20' : 'bg-amber-500/20'}`} />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] blur-[120px] rounded-full animate-pulse delay-700 bg-slate-800/10" />
-      </div>
-
-      <header className="h-16 flex items-center justify-between px-8 border-b backdrop-blur-3xl z-50 bg-slate-900/40 border-white/5 text-white">
+    <div className={`h-screen flex flex-col font-sans transition-all duration-700 overflow-hidden ${currentTheme.bg} text-slate-200 selection:bg-indigo-500/30`}>
+      <header className="h-14 flex items-center justify-between px-6 border-b border-white/5 bg-slate-900/40 backdrop-blur-3xl z-50">
         <div className="flex items-center space-x-6">
-          <div className="flex items-center gap-3">
-             <div className={`p-2 rounded-xl transition-all ${currentTheme.primary} ${currentTheme.shadow}`}>
-                <Sparkles size={20} className="animate-pulse text-white" />
+          <div className="flex items-center gap-3 group cursor-pointer">
+             <div className={`p-2 rounded-xl transition-all duration-500 group-hover:rotate-12 ${currentTheme.primary} ${currentTheme.shadow}`}>
+                <Sparkles size={16} className="text-white" />
              </div>
              <div className="flex flex-col">
-               <h1 className="text-sm font-black tracking-[0.2em] uppercase">CODECANVAS<span className="opacity-50 font-light">.STUDIO</span></h1>
-               <span className="text-[9px] uppercase tracking-widest font-bold text-slate-500">Visual Synthesis Engine</span>
+               <h1 className="text-xs font-black tracking-[0.25em] uppercase text-white">CODECANVAS<span className="opacity-30 font-medium">.STUDIO</span></h1>
+               <span className="text-[7px] font-bold tracking-[0.3em] uppercase text-slate-500">Visual synthesis protocol v4.2</span>
              </div>
           </div>
           
-          <div className="h-8 w-px bg-white/10" />
+          <div className="h-6 w-px bg-white/10" />
 
           <div className="relative">
             <button 
               onClick={() => setShowThemeMenu(!showThemeMenu)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all bg-white/5 border-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition-all text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-white"
             >
-              <Palette size={14} className={currentTheme.text} />
+              <Palette size={12} className={currentTheme.text} />
               <span>{theme}</span>
-              <ChevronDown size={12} className={`transition-transform duration-300 ${showThemeMenu ? 'rotate-180' : ''}`} />
             </button>
             
             {showThemeMenu && (
-              <div className="absolute top-full left-0 mt-2 w-48 p-2 rounded-2xl border backdrop-blur-3xl bg-slate-900/95 border-white/10 shadow-2xl animate-in zoom-in-95 fade-in duration-200 z-[100]">
+              <div className="absolute top-full left-0 mt-2 w-56 p-2 rounded-2xl border border-white/10 bg-slate-900/95 backdrop-blur-3xl shadow-2xl animate-in zoom-in-95 fade-in duration-200 z-[100]">
                 <ThemeOption active={theme === 'midnight'} onClick={() => { setTheme('midnight'); setShowThemeMenu(false); }} icon={<Moon size={14} />} label="Midnight" color="bg-indigo-500" />
                 <ThemeOption active={theme === 'emerald'} onClick={() => { setTheme('emerald'); setShowThemeMenu(false); }} icon={<Droplets size={14} />} label="Emerald" color="bg-emerald-500" />
                 <ThemeOption active={theme === 'cyberpunk'} onClick={() => { setTheme('cyberpunk'); setShowThemeMenu(false); }} icon={<Zap size={14} />} label="Cyberpunk" color="bg-amber-500" />
@@ -213,123 +208,111 @@ export default function App() {
           </div>
         </div>
         
-        <div className="flex items-center gap-6">
-          <div className="hidden lg:flex items-center gap-4 px-4 py-1.5 rounded-full border transition-colors bg-white/5 border-white/10">
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3 px-4 py-1.5 rounded-full bg-slate-800/30 border border-white/5">
              <div className="flex flex-col items-end">
-               <span className="text-[8px] uppercase tracking-widest font-black text-slate-500">Engine_Clock</span>
-               <span className={`text-[10px] font-mono font-bold ${currentTheme.text}`}>0.2ms Latency</span>
+               <span className="text-[7px] font-black tracking-widest text-slate-500 uppercase">Core Status</span>
+               <span className="text-[9px] font-mono font-bold text-emerald-400">READY</span>
              </div>
-             <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${theme === 'midnight' ? 'bg-indigo-400' : theme === 'emerald' ? 'bg-emerald-400' : theme === 'rose' ? 'bg-rose-400' : 'bg-amber-400'}`} />
+             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           </div>
-          
+
           <button
             onClick={handleGenerate}
             disabled={status === AppStatus.ANALYZING}
             className={`
-              px-8 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-[0.15em] flex items-center gap-3 transition-all
+              px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 transition-all
               ${status === AppStatus.ANALYZING 
                 ? 'bg-slate-800 text-slate-600 cursor-not-allowed border-white/5' 
-                : `${currentTheme.primary} text-white hover:brightness-110 hover:scale-105 active:scale-95 shadow-2xl ${currentTheme.shadow} border ${currentTheme.border}`
+                : `${currentTheme.primary} text-white hover:brightness-110 hover:scale-[1.02] shadow-2xl ${currentTheme.shadow} border ${currentTheme.border}`
               }
             `}
           >
-            <Wand2 size={14} />
-            {status === AppStatus.ANALYZING ? 'Synthesizing...' : 'Build Application'}
+            <Wand2 size={12} />
+            {status === AppStatus.ANALYZING ? 'Processing...' : 'Build Protocol'}
           </button>
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden p-4 lg:p-6 gap-6">
-        <section className="flex-[65] flex flex-col gap-4 min-w-0">
-          <div className="flex items-center justify-between px-1">
-            <div className="flex items-center p-1 rounded-xl border transition-all bg-slate-900/60 border-white/5 backdrop-blur-xl gap-1">
+      <main className="flex-1 flex overflow-hidden p-2 gap-2 bg-black/10">
+        {/* Left: Input Interface (65%) */}
+        <section className="flex-[65] flex flex-col gap-2 min-w-0">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center p-1 rounded-xl bg-slate-900/60 border border-white/5 backdrop-blur-xl shadow-lg gap-1">
               <button 
                 onClick={() => whiteboardRef.current?.toggleSidebar()}
-                className="p-2.5 hover:bg-white/10 text-slate-400 hover:text-white rounded-lg transition-colors flex items-center justify-center"
-                title="Toggle Menu"
+                className="p-2.5 hover:bg-white/10 text-slate-400 hover:text-white rounded-lg transition-colors"
+                title="Library"
               >
                 <Menu size={16} />
               </button>
-              
               <div className="w-px h-5 bg-white/10 mx-1" />
-
-              <ModeToggle themeClass={currentTheme.primary} active={inputMode === 'draw'} onClick={() => { setInputMode('draw'); stopCamera(); }} icon={<MousePointer2 size={14}/>} label="Canvas" />
-              <ModeToggle themeClass={currentTheme.primary} active={inputMode === 'camera'} onClick={startCamera} icon={<Camera size={14}/>} label="Lens" />
-              <ModeToggle themeClass={currentTheme.primary} active={inputMode === 'upload'} onClick={() => { setInputMode('upload'); stopCamera(); }} icon={<Upload size={14}/>} label="Assets" />
+              <ModeToggle themeClass={currentTheme.primary} active={inputMode === 'draw'} onClick={() => { setInputMode('draw'); stopCamera(); }} icon={<MousePointer2 size={14}/>} label="Studio Canvas" />
+              <ModeToggle themeClass={currentTheme.primary} active={inputMode === 'camera'} onClick={startCamera} icon={<Camera size={14}/>} label="Optical Scan" />
+              <ModeToggle themeClass={currentTheme.primary} active={inputMode === 'upload'} onClick={() => { setInputMode('upload'); stopCamera(); }} icon={<Upload size={14}/>} label="Asset Import" />
             </div>
 
             {status === AppStatus.COMPLETED && (
               <button 
                 onClick={reset} 
-                className="flex items-center gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-xl border transition-all bg-white/5 border-white/5 hover:text-white hover:bg-white/10"
+                className="flex items-center gap-2 px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
               >
-                <RefreshCcw size={14} />
-                New Build
+                <RefreshCcw size={12} />
+                Clear Workspace
               </button>
             )}
           </div>
 
-          <div className="flex-1 relative flex flex-col overflow-hidden rounded-3xl border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl">
-            <div className={`flex-1 transition-all duration-500 ${inputMode === 'draw' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none absolute inset-0'}`}>
+          <div className="flex-1 relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/20 backdrop-blur-md shadow-2xl">
+            <div className={`flex-1 transition-all duration-500 ${inputMode === 'draw' ? 'opacity-100 scale-100' : 'opacity-0 scale-98 pointer-events-none absolute inset-0'}`}>
                <Whiteboard ref={whiteboardRef} onCapture={() => {}} />
             </div>
 
             <div className={`flex-1 flex flex-col items-center justify-center transition-all duration-500 ${inputMode === 'camera' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none absolute inset-0'}`}>
               {showCamera ? (
-                <div className="relative w-full h-full flex flex-col">
-                  <video ref={videoRef} autoPlay playsInline className="flex-1 w-full object-cover grayscale brightness-90 transition-all duration-700" />
-                  <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-8 z-20">
-                    <button onClick={stopCamera} className="w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all bg-rose-500 text-white hover:bg-rose-400"><X size={24}/></button>
-                    <button onClick={takePhoto} className={`w-24 h-24 rounded-full shadow-2xl hover:scale-105 active:scale-90 transition-all border-[8px] bg-white ${currentTheme.border}`} />
-                    <div className="w-14 h-14" />
+                <div className="relative w-full h-full flex flex-col overflow-hidden">
+                  <div className="absolute inset-0 z-10 scanning-line opacity-50"></div>
+                  <video ref={videoRef} autoPlay playsInline className="flex-1 w-full object-cover grayscale brightness-110 contrast-125 transition-all" />
+                  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-8 z-20">
+                    <button onClick={stopCamera} className="w-12 h-12 rounded-full flex items-center justify-center bg-rose-500 text-white shadow-xl hover:scale-105 transition-transform"><X size={20}/></button>
+                    <button onClick={takePhoto} className={`w-20 h-20 rounded-full border-[8px] bg-white shadow-2xl hover:scale-105 active:scale-90 transition-all ${currentTheme.border}`} />
+                    <div className="w-12" />
                   </div>
                 </div>
               ) : capturedImage ? (
-                <div className="p-12 h-full w-full flex flex-col items-center justify-center animate-in fade-in zoom-in-95">
-                   <img src={capturedImage} alt="Captured" className="max-h-[75%] rounded-2xl shadow-2xl border border-white/10 object-contain" />
+                <div className="p-10 h-full w-full flex flex-col items-center justify-center animate-in fade-in zoom-in-95">
+                   <img src={capturedImage} alt="Captured" className="max-h-[75%] rounded-2xl shadow-2xl border border-white/10 object-contain ring-1 ring-white/10" />
                    <div className="mt-8 flex gap-4">
-                     <button onClick={startCamera} className="px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-white/5 border border-white/10 hover:bg-white/10">Retake Frame</button>
-                     <button onClick={() => setInputMode('draw')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl transition-all ${currentTheme.primary} text-white ${currentTheme.shadow}`}>Confirm Design</button>
+                     <button onClick={startCamera} className="px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 hover:text-white transition-all">Retry Frame</button>
+                     <button onClick={() => setInputMode('draw')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl transition-all ${currentTheme.primary} text-white`}>Accept Protocol</button>
                    </div>
                 </div>
               ) : (
-                <button onClick={startCamera} className="group p-20 text-center">
-                   <div className={`w-28 h-28 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 transition-all group-hover:scale-110 group-hover:rotate-6 border bg-white/5 border-white/10 shadow-lg`}>
-                     <Camera className={`w-12 h-12 ${currentTheme.text}`} />
+                <div className="text-center group">
+                   <div className={`w-24 h-24 rounded-[2rem] flex items-center justify-center mx-auto mb-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 border border-white/5 bg-slate-900/50`}>
+                     <Camera className={`w-10 h-10 ${currentTheme.text} opacity-50 group-hover:opacity-100 transition-opacity`} />
                    </div>
-                   <h3 className="text-2xl font-black mb-3 text-white tracking-tight">Lens Interface</h3>
-                   <p className="text-slate-500 text-xs font-medium max-w-[200px] mx-auto leading-relaxed">Activate optical sensor to scan physical UI wireframes</p>
-                </button>
+                   <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600 group-hover:text-slate-400 transition-colors">Optical sensor standby</p>
+                </div>
               )}
               <canvas ref={canvasRef} className="hidden" />
             </div>
 
             <div className={`flex-1 flex flex-col items-center justify-center transition-all duration-500 ${inputMode === 'upload' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none absolute inset-0'}`}>
-              <div 
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full h-full flex flex-col items-center justify-center cursor-pointer p-8 group"
-              >
+              <div onClick={() => fileInputRef.current?.click()} className="w-full h-full flex flex-col items-center justify-center cursor-pointer p-8 group">
                 {uploadedImage ? (
-                  <div className="relative group/img overflow-hidden rounded-2xl shadow-2xl border border-white/5">
-                    <img src={uploadedImage} alt="Uploaded" className="max-h-[420px] transition-all duration-500 group-hover/img:scale-105 group-hover/img:brightness-50" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity">
-                       <span className="text-[10px] font-black uppercase tracking-widest px-6 py-2.5 rounded-full shadow-2xl bg-white text-slate-950">Update Source</span>
+                  <div className="relative overflow-hidden rounded-2xl shadow-2xl border border-white/10">
+                    <img src={uploadedImage} alt="Uploaded" className="max-h-[400px] transition-all group-hover:scale-105 duration-700" />
+                    <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                       <span className="px-5 py-2 rounded-lg bg-white text-slate-950 text-[10px] font-black uppercase tracking-widest">Update Asset</span>
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center space-y-8">
-                    <div className={`w-28 h-28 rounded-[2.5rem] flex items-center justify-center mx-auto transition-all group-hover:scale-110 group-hover:-rotate-3 border bg-white/5 border-white/10 shadow-lg`}>
-                      <Upload className={`w-12 h-12 ${currentTheme.text}`} />
+                  <div className="text-center">
+                    <div className={`w-24 h-24 rounded-[2rem] flex items-center justify-center mx-auto mb-6 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3 border border-white/5 bg-slate-900/50`}>
+                      <Upload className={`w-10 h-10 ${currentTheme.text} opacity-50 group-hover:opacity-100 transition-opacity`} />
                     </div>
-                    <div className="space-y-2">
-                      <p className="text-2xl font-black text-white tracking-tight">Import Asset</p>
-                      <p className="text-slate-500 text-xs font-medium tracking-tight">High-fidelity PNG, JPG, or WEBP UI assets</p>
-                    </div>
-                    <div className="flex justify-center gap-3">
-                      <AssetTag>Wireframe</AssetTag>
-                      <AssetTag>Screenshot</AssetTag>
-                      <AssetTag>Doodle</AssetTag>
-                    </div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Asset injection portal</p>
                   </div>
                 )}
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
@@ -337,67 +320,57 @@ export default function App() {
             </div>
 
             {error && (
-              <div className="absolute bottom-8 left-8 right-8 p-5 bg-rose-500/10 border border-rose-500/20 backdrop-blur-2xl rounded-2xl flex items-center gap-4 text-rose-500 animate-in fade-in slide-in-from-bottom-8 z-[60] shadow-2xl shadow-rose-950/20">
-                <div className="bg-rose-500 p-2 rounded-lg shadow-lg"><AlertCircle size={20} className="text-white" /></div>
+              <div className="absolute bottom-6 left-6 right-6 p-4 bg-rose-500/10 border border-rose-500/20 backdrop-blur-3xl rounded-xl flex items-center gap-4 text-rose-500 z-[60] animate-in slide-in-from-bottom-4">
+                <div className="p-2 rounded-lg bg-rose-500 text-white shadow-lg"><AlertCircle size={18} /></div>
                 <div className="flex-1">
-                  <p className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-1">System Exception</p>
-                  <p className="text-xs font-bold leading-relaxed">{error}</p>
+                  <p className="text-[8px] font-black uppercase tracking-widest opacity-60">System Malfunction</p>
+                  <p className="text-[11px] font-bold">{error}</p>
                 </div>
-                <button onClick={() => setError(null)} className="p-2 rounded-lg transition-colors hover:bg-white/5"><X size={16}/></button>
+                <button onClick={() => setError(null)} className="p-2 hover:bg-white/5 rounded-lg"><X size={14}/></button>
               </div>
             )}
           </div>
         </section>
 
-        <section className="flex-[35] flex flex-col gap-4 min-w-0">
-          <div className="flex-1 flex flex-col overflow-hidden rounded-3xl border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl">
-            <div className="flex p-1.5 border-b transition-colors bg-black/20 border-white/5">
-              <TabButton themeClass={currentTheme.text} active={activeTab === 'analysis'} onClick={() => setActiveTab('analysis')} icon={<Layers size={14} />} label="Diagnostics" />
-              <TabButton themeClass={currentTheme.text} active={activeTab === 'preview'} onClick={() => setActiveTab('preview')} icon={<Eye size={14} />} label="Live View" />
-              <TabButton themeClass={currentTheme.text} active={activeTab === 'code'} onClick={() => setActiveTab('code')} icon={<Code size={14} />} label="Engine Output" />
+        {/* Right: Output Interface (35%) */}
+        <section className="flex-[35] flex flex-col gap-2 min-w-0">
+          <div className="flex-1 flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/30 backdrop-blur-xl shadow-2xl">
+            <div className="flex p-1 border-b border-white/5 bg-black/40">
+              <TabButton active={activeTab === 'analysis'} onClick={() => setActiveTab('analysis')} icon={<Layers size={14} />} label="DIAGNOSTICS" />
+              <TabButton active={activeTab === 'preview'} onClick={() => setActiveTab('preview')} icon={<Eye size={14} />} label="LIVE VIEW" />
+              <TabButton active={activeTab === 'code'} onClick={() => setActiveTab('code')} icon={<Code size={14} />} label="CODEGEN" />
             </div>
 
             <div className="flex-1 overflow-hidden relative">
               {!result ? (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-16 text-center opacity-30">
-                  <div className="w-20 h-20 border-2 border-dashed rounded-[2rem] flex items-center justify-center mb-8 border-slate-700">
-                    <Layout className="w-8 h-8 text-slate-500" />
-                  </div>
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.4em] mb-4 text-slate-500">Kernel Standby</h3>
-                  <p className="text-[11px] text-slate-600 max-w-[220px] leading-loose">Waiting for visual input to initialize synthesis sequence.</p>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center opacity-30">
+                  <Box className="w-12 h-12 text-slate-700 mb-6 animate-pulse" />
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-600 mb-2">Interface Engine</h3>
+                  <p className="text-[10px] font-medium text-slate-700">Awaiting visual synchronization</p>
                 </div>
               ) : (
-                <div className="h-full animate-in fade-in slide-in-from-right-4 duration-700 flex flex-col">
+                <div className="h-full flex flex-col animate-in fade-in slide-in-from-right-4 duration-500">
                   {activeTab === 'analysis' && (
-                    <div className="flex-1 overflow-y-auto custom-scrollbar p-8 space-y-12">
-                      <div className="space-y-6">
-                        <label className={`text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 ${currentTheme.text}`}>
-                           <div className={`w-5 h-px ${theme === 'midnight' ? 'bg-indigo-400/30' : theme === 'emerald' ? 'bg-emerald-400/30' : theme === 'rose' ? 'bg-rose-400/30' : 'bg-amber-400/30'}`} /> UI Archetype
-                        </label>
-                        <div className="grid grid-cols-1 gap-4">
-                          <DataCard label="Structure" value={result.analysis.uiType} />
-                          <DataCard label="Layout Type" value={result.analysis.layout} />
-                        </div>
+                    <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
+                      <div className="grid grid-cols-2 gap-4">
+                        <AnalysisBlock label="System Archetype" value={result.analysis.uiType} themeClass={currentTheme.text} />
+                        <AnalysisBlock label="Spatial Layout" value={result.analysis.layout} themeClass={currentTheme.text} />
                       </div>
-
-                      <div className="space-y-6">
-                        <label className={`text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 ${currentTheme.text}`}>
-                           <div className={`w-5 h-px ${theme === 'midnight' ? 'bg-indigo-400/30' : theme === 'emerald' ? 'bg-emerald-400/30' : theme === 'rose' ? 'bg-rose-400/30' : 'bg-amber-400/30'}`} /> Node Graph
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {result.analysis.components.map((comp, i) => (
-                            <span key={i} className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-[0.1em] border transition-colors bg-white/5 border-white/10 ${currentTheme.text}`}>
-                              {comp}
-                            </span>
+                      <div className="space-y-3">
+                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-600 block flex items-center gap-2">
+                           <Monitor size={10} /> Neural Map (Nodes)
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {result.analysis.components.map((c, i) => (
+                            <span key={i} className="px-2 py-1 rounded-md text-[8px] font-black border border-white/5 bg-white/5 text-slate-400 hover:bg-white/10 transition-colors uppercase tracking-widest">{c}</span>
                           ))}
                         </div>
                       </div>
-
-                      <div className="space-y-6">
-                        <label className={`text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 ${currentTheme.text}`}>
-                           <div className={`w-5 h-px ${theme === 'midnight' ? 'bg-indigo-400/30' : theme === 'emerald' ? 'bg-emerald-400/30' : theme === 'rose' ? 'bg-rose-400/30' : 'bg-amber-400/30'}`} /> Design Tokens
-                        </label>
-                        <div className="p-5 rounded-2xl border font-mono text-[10px] leading-[1.8] transition-colors bg-slate-950/50 border-white/5 text-slate-400">
+                      <div className="space-y-3">
+                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-600 block flex items-center gap-2">
+                           <Terminal size={10} /> Style Primitives
+                        </span>
+                        <div className="p-4 rounded-xl border border-white/5 bg-black/40 font-mono text-[9px] leading-relaxed text-slate-500 italic">
                            {result.analysis.colors}
                         </div>
                       </div>
@@ -406,21 +379,17 @@ export default function App() {
 
                   {activeTab === 'code' && (
                     <div className="flex-1 flex flex-col bg-slate-950 overflow-hidden">
-                      <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-slate-900/40">
-                         <div className="flex items-center gap-3">
-                            <FileJson className={currentTheme.text} size={16} />
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500">Standalone Manifest</span>
+                      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 bg-slate-900/60">
+                         <div className="flex items-center gap-2">
+                            <FileJson size={12} className={currentTheme.text} />
+                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">manifest.json</span>
                          </div>
-                         <button 
-                          onClick={copyCode}
-                          className="flex items-center gap-2 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg border transition-all bg-white/5 border-white/10 hover:bg-white/10 text-white"
-                        >
-                          <Copy size={12} />
-                          Copy Build
-                        </button>
+                         <button onClick={copyCode} className="px-3 py-1 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all flex items-center gap-1.5 text-[10px] font-bold">
+                            <Copy size={12} /> Copy
+                         </button>
                       </div>
                       <div className="flex-1 overflow-auto custom-scrollbar bg-slate-950">
-                        <pre className={`p-6 font-mono text-[11px] leading-[1.6] whitespace-pre ${theme === 'midnight' ? 'text-indigo-300/80' : theme === 'emerald' ? 'text-emerald-300/80' : theme === 'rose' ? 'text-rose-300/80' : 'text-amber-300/80'}`}>
+                        <pre className="p-5 font-mono text-[10px] leading-relaxed text-indigo-300/60 whitespace-pre">
                           {result.htmlCode}
                         </pre>
                       </div>
@@ -429,29 +398,20 @@ export default function App() {
 
                   {activeTab === 'preview' && (
                     <div className="flex-1 bg-white relative flex flex-col overflow-hidden">
-                      <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 flex items-center justify-between">
-                         <div className="flex items-center gap-2">
-                            <div className="flex gap-1">
-                               <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-                               <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-                               <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-                            </div>
-                            <span className="text-[10px] font-bold text-slate-400 font-mono ml-4 truncate max-w-[150px]">production-v1.local</span>
+                      <div className="h-8 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
+                         <div className="flex gap-1.5">
+                           <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+                           <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+                           <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
                          </div>
-                         <button 
-                          onClick={openPreviewInNewTab}
-                          className="p-1.5 hover:bg-slate-200 rounded-lg text-slate-400 hover:text-slate-600 transition-all"
-                          title="Open in new tab"
-                         >
-                            <ExternalLink size={14} />
-                         </button>
+                         <div className="flex-1 mx-4 h-5 bg-white rounded border border-slate-200 flex items-center px-3">
+                            <span className="text-[8px] font-mono text-slate-400">localhost:3000/render/v1</span>
+                         </div>
                       </div>
-                      <iframe
-                        srcDoc={result.htmlCode}
-                        title="Live Preview"
-                        className="flex-1 w-full border-0"
-                        sandbox="allow-scripts allow-modals allow-same-origin"
-                      />
+                      <iframe srcDoc={result.htmlCode} title="Preview" className="flex-1 w-full border-0" sandbox="allow-scripts allow-modals allow-same-origin" />
+                      <button onClick={openPreviewInNewTab} className="absolute bottom-6 right-6 p-3 bg-indigo-600 text-white rounded-2xl shadow-2xl hover:scale-110 active:scale-95 transition-all">
+                        <ExternalLink size={16}/>
+                      </button>
                     </div>
                   )}
                 </div>
@@ -462,22 +422,20 @@ export default function App() {
       </main>
 
       {status === AppStatus.ANALYZING && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center animate-in fade-in duration-700 bg-slate-950/95 backdrop-blur-3xl">
-          <div className="text-center space-y-12 max-w-lg px-12">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 backdrop-blur-2xl">
+          <div className="text-center space-y-10 max-w-sm px-10">
             <div className="relative inline-flex items-center justify-center">
-              <div className={`w-40 h-40 border-[4px] rounded-full animate-spin transition-colors border-white/5 ${theme === 'midnight' ? 'border-t-indigo-500' : theme === 'emerald' ? 'border-t-emerald-500' : theme === 'rose' ? 'border-t-rose-500' : 'border-t-amber-500'}`}></div>
+              <div className={`w-32 h-32 border-[2px] rounded-full animate-[spin_3s_linear_infinite] border-white/5 ${theme === 'midnight' ? 'border-t-indigo-500' : 'border-t-emerald-500'}`}></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <Sparkles className={`w-12 h-12 animate-pulse ${currentTheme.text}`} />
+                <Rocket className={`w-10 h-10 animate-pulse ${currentTheme.text}`} />
               </div>
             </div>
-            <div className="space-y-6">
-              <h3 className="text-3xl font-black tracking-tight uppercase transition-colors text-white">Synthesizing Vision</h3>
-              <div className="h-1 w-64 mx-auto rounded-full overflow-hidden transition-colors bg-slate-900 border border-white/5">
-                <div className={`h-full animate-[loading_2s_ease-in-out_infinite] ${currentTheme.primary} shadow-[0_0_15px_rgba(99,102,241,0.5)]`} />
-              </div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.4em] leading-relaxed text-slate-500">
-                Generating Pixel-Perfect Architecture
-              </p>
+            <div className="space-y-4">
+              <h3 className="text-xl font-black tracking-[0.2em] uppercase text-white">Synthesizing Core</h3>
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 leading-relaxed">Deconstructing visual primitives and remapping to neural component graph...</p>
+            </div>
+            <div className="w-48 h-1 mx-auto bg-slate-900 rounded-full overflow-hidden border border-white/5">
+               <div className={`h-full animate-[loading_2s_infinite] ${currentTheme.primary}`} />
             </div>
           </div>
         </div>
@@ -487,54 +445,27 @@ export default function App() {
 }
 
 const ModeToggle = ({ active, onClick, icon, label, themeClass }: any) => (
-  <button
-    onClick={onClick}
-    className={`px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-3 transition-all ${
-      active 
-        ? `${themeClass} text-white shadow-xl border border-white/10 scale-105` 
-        : 'text-slate-500 hover:text-slate-400 hover:bg-white/5'
-    }`}
-  >
-    {icon}
-    <span className="hidden lg:inline">{label}</span>
+  <button onClick={onClick} className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest flex items-center gap-2.5 transition-all duration-300 ${active ? `${themeClass} text-white shadow-xl scale-105` : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}>
+    {icon} <span>{label}</span>
   </button>
 );
 
-const TabButton = ({ active, onClick, icon, label, themeClass }: any) => (
-  <button
-    onClick={onClick}
-    className={`flex-1 py-3 px-6 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all ${
-      active 
-        ? `bg-white/5 ${themeClass} border border-white/5` 
-        : 'text-slate-500 hover:text-slate-300'
-    }`}
-  >
-    {icon}
-    <span className="hidden xl:inline">{label}</span>
+const TabButton = ({ active, onClick, icon, label }: any) => (
+  <button onClick={onClick} className={`flex-1 py-3 text-[9px] font-black uppercase tracking-[0.25em] flex items-center justify-center gap-2.5 transition-all ${active ? 'bg-white/5 text-indigo-400 border-b-2 border-indigo-500' : 'text-slate-600 hover:text-slate-400'}`}>
+    {icon} <span>{label}</span>
   </button>
 );
 
 const ThemeOption = ({ active, onClick, icon, label, color }: any) => (
-  <button 
-    onClick={onClick}
-    className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all ${active ? 'bg-white/10' : 'hover:bg-white/5 text-slate-400 hover:text-white'}`}
-  >
-    <div className={`w-6 h-6 rounded-lg ${color} flex items-center justify-center shadow-lg`}>
-      <div className="text-white scale-75">{icon}</div>
-    </div>
+  <button onClick={onClick} className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all ${active ? 'bg-white/10' : 'hover:bg-white/5 text-slate-400 hover:text-white'}`}>
+    <div className={`w-6 h-6 rounded-lg ${color} flex items-center justify-center shadow-lg text-white scale-75`}>{icon}</div>
     <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
   </button>
 );
 
-const DataCard = ({ label, value }: any) => (
-  <div className="p-4 rounded-xl border transition-all group bg-slate-950/50 border-white/5 hover:border-white/10">
-    <label className="text-[8px] font-black uppercase tracking-widest block mb-1.5 transition-colors text-slate-600">{label}</label>
-    <p className="text-xs font-black uppercase tracking-tight text-slate-200">{value}</p>
+const AnalysisBlock = ({ label, value, themeClass }: any) => (
+  <div className="p-4 rounded-xl border border-white/5 bg-black/20 space-y-1.5 group hover:border-white/10 transition-colors">
+    <span className="text-[7px] font-black uppercase tracking-widest text-slate-600 block">{label}</span>
+    <p className={`text-[11px] font-black uppercase tracking-tight text-white ${themeClass}`}>{value}</p>
   </div>
-);
-
-const AssetTag = ({ children }: any) => (
-  <span className="px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-lg border bg-white/5 border-white/10 text-slate-600">
-    {children}
-  </span>
 );

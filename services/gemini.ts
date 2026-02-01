@@ -2,7 +2,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { TransformationResult } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Always use const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export async function transformSketchToCode(imageBase64: string): Promise<TransformationResult> {
   const model = 'gemini-3-flash-preview';
