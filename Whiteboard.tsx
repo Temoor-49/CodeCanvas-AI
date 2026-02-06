@@ -101,6 +101,7 @@ const Whiteboard = forwardRef<WhiteboardHandle, WhiteboardProps>(({ onCapture },
   const [showSurfaceSettings, setShowSurfaceSettings] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [clipboard, setClipboard] = useState<Shape | null>(null);
+  const [pasteCount, setPasteCount] = useState(1);
   const [gridVisible, setGridVisible] = useState(true);
   const [gridSpacing, setGridSpacing] = useState(40);
   const [gridDotSize, setGridDotSize] = useState(1.2);
@@ -157,36 +158,55 @@ const Whiteboard = forwardRef<WhiteboardHandle, WhiteboardProps>(({ onCapture },
   const handleCopy = useCallback(() => {
     if (selectedShapeId) {
       const shape = shapes.find(s => s.id === selectedShapeId);
-      if (shape) setClipboard(JSON.parse(JSON.stringify(shape)));
+      if (shape) {
+        // High-fidelity deep clone of all properties
+        setClipboard(JSON.parse(JSON.stringify(shape)));
+        setPasteCount(1); // Reset paste offset multiplier
+      }
     }
-    setIsSidebarOpen(false);
   }, [selectedShapeId, shapes]);
 
   const handlePaste = useCallback(() => {
     if (clipboard) {
       const pastedShape = JSON.parse(JSON.stringify(clipboard)) as Shape;
       pastedShape.id = Math.random().toString(36).substr(2, 9);
-      pastedShape.points = pastedShape.points.map(p => ({ x: p.x + 20, y: p.y + 20 }));
+      
+      // Calculate cumulative offset to prevent overlapping repeated pastes
+      const offsetVal = 20 * pasteCount;
+      pastedShape.points = pastedShape.points.map(p => ({ 
+        x: p.x + offsetVal, 
+        y: p.y + offsetVal 
+      }));
+      
+      // Ensure clone is unlocked regardless of source state
       pastedShape.isLocked = false;
-      saveHistory([...shapes, pastedShape]);
+      
+      const newShapes = [...shapes, pastedShape];
+      saveHistory(newShapes);
       setSelectedShapeId(pastedShape.id);
+      setPasteCount(prev => prev + 1);
+      setIsSidebarOpen(false); // Action completed, focus back to board
     }
-    setIsSidebarOpen(false);
-  }, [clipboard, shapes, saveHistory]);
+  }, [clipboard, shapes, saveHistory, pasteCount]);
 
   const handleDuplicate = useCallback(() => {
     if (selectedShapeId) {
       const shape = shapes.find(s => s.id === selectedShapeId);
       if (shape) {
+        // Duplicate is essentially Copy + Paste immediately
         const clonedShape = JSON.parse(JSON.stringify(shape)) as Shape;
         clonedShape.id = Math.random().toString(36).substr(2, 9);
+        
+        // Offset once from the source
         clonedShape.points = clonedShape.points.map(p => ({ x: p.x + 20, y: p.y + 20 }));
         clonedShape.isLocked = false;
-        saveHistory([...shapes, clonedShape]);
+        
+        const newShapes = [...shapes, clonedShape];
+        saveHistory(newShapes);
         setSelectedShapeId(clonedShape.id);
+        setIsSidebarOpen(false);
       }
     }
-    setIsSidebarOpen(false);
   }, [selectedShapeId, shapes, saveHistory]);
 
   const toggleLock = useCallback(() => {
@@ -264,8 +284,8 @@ const Whiteboard = forwardRef<WhiteboardHandle, WhiteboardProps>(({ onCapture },
         }
       }
       if (e.ctrlKey || e.metaKey) {
-        if (e.key === 'c') handleCopy();
-        if (e.key === 'v') handlePaste();
+        if (e.key === 'c') { e.preventDefault(); handleCopy(); }
+        if (e.key === 'v') { e.preventDefault(); handlePaste(); }
         if (e.key === 'd') { e.preventDefault(); handleDuplicate(); }
         if (e.key === 'l') { e.preventDefault(); toggleLock(); }
         if (e.key === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
