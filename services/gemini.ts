@@ -1,8 +1,7 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { TransformationResult } from "../types";
+import { TransformationResult } from "../types.ts";
 
-// Always use const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export async function transformSketchToCode(imageBase64: string): Promise<TransformationResult> {
@@ -45,10 +44,6 @@ export async function transformSketchToCode(imageBase64: string): Promise<Transf
         const React = window.React;
         const ReactDOM = window.ReactDOM;
         const { useState, useEffect, createElement: ce } = React;
-        
-        // Use lucide.createIcons() after rendering if needed or use Lucide components if available via UMD
-        // Actually, for UMD, we often use generic icon placeholders or SVG paths if Lucide UMD is tricky.
-        // Better: Use SVG paths for icons or FontAwesome if easier. Let's stick to clean SVGs or standard Tailwind icons.
         
         function App() {
           // Robust application logic here

@@ -7,9 +7,9 @@ import {
   ChevronDown, Copy, ExternalLink, Moon, Sun, Zap, Droplets, Menu,
   Terminal, Monitor, Box, Rocket
 } from 'lucide-react';
-import { transformSketchToCode } from './services/gemini';
-import { AppStatus, TransformationResult } from './types';
-import Whiteboard, { WhiteboardHandle } from './Whiteboard';
+import { transformSketchToCode } from './services/gemini.ts';
+import { AppStatus, TransformationResult } from './types.ts';
+import Whiteboard, { WhiteboardHandle } from './Whiteboard.tsx';
 
 type AppTheme = 'midnight' | 'emerald' | 'cyberpunk' | 'rose';
 
